@@ -1,0 +1,61 @@
+<article
+  class="violation-card"
+  [class.expanded]="expanded"
+  [attr.aria-expanded]="expanded"
+>
+  <button
+    class="card-header"
+    (click)="toggle()"
+    [attr.aria-expanded]="expanded"
+    [attr.aria-label]="violation.severity + ' violation: ' + violation.title"
+  >
+    <div class="header-left">
+      <span
+        class="severity-badge"
+        [class.critical]="violation.severity === 'critical'"
+        [class.warning]="violation.severity === 'warning'"
+        [class.info]="violation.severity === 'info'"
+        [attr.aria-label]="violation.severity + ' severity'"
+      >
+        {{ violation.severity }}
+      </span>
+      <span class="card-title">{{ violation.title }}</span>
+    </div>
+    <div class="header-right">
+      <span class="wcag-badge" [attr.aria-label]="'WCAG level ' + violation.wcag_level">
+        {{ violation.wcag_level }}
+      </span>
+      <span class="source-badge" [attr.aria-label]="'Source: ' + violation.source">
+        {{ violation.source }}
+      </span>
+      <span class="chevron" [class.open]="expanded" aria-hidden="true">›</span>
+    </div>
+  </button>
+
+  @if (expanded) {
+    <div class="card-body">
+      <dl class="detail-list">
+        <div class="detail-row">
+          <dt>WCAG Rule</dt>
+          <dd>
+            <code>{{ violation.wcag_rule }}</code>
+          </dd>
+        </div>
+        <div class="detail-row">
+          <dt>Element</dt>
+          <dd>
+            <code>{{ violation.element }}</code>
+          </dd>
+        </div>
+        <div class="detail-row">
+          <dt>What's wrong</dt>
+          <dd>{{ violation.explanation }}</dd>
+        </div>
+        <div class="detail-row">
+          <dt>How to fix</dt>
+          <dd class="recommendation">{{ violation.recommendation }}</dd>
+        </div>
+      </dl>
+    </div>
+  }
+</article>

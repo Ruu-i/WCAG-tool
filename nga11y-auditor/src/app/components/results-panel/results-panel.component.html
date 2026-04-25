@@ -1,0 +1,100 @@
+<section class="results-panel" aria-label="Audit results">
+
+  <!-- Empty state -->
+  @if (state === 'empty') {
+    <div class="empty-state" role="status">
+      <div class="empty-icon" aria-hidden="true">⚡</div>
+      <h2>Ready to audit</h2>
+      <p>Paste an Angular component template in the editor and click <strong>Audit</strong>.</p>
+      <ul class="tips">
+        <li>Add <strong>component.ts</strong> for deeper TypeScript checks</li>
+        <li>Try one of the examples to see it in action</li>
+      </ul>
+    </div>
+  }
+
+  <!-- Loading state — skeleton cards -->
+  @if (state === 'loading') {
+    <div class="loading-state" role="status" aria-live="polite" aria-label="Auditing your component">
+      <div class="summary-bar skeleton-bar">
+        <div class="skeleton-pill"></div>
+        <div class="skeleton-pill"></div>
+        <div class="skeleton-pill"></div>
+      </div>
+      @for (item of skeletonItems; track item) {
+        <div class="skeleton-card" aria-hidden="true">
+          <div class="skeleton-row">
+            <div class="skeleton-badge"></div>
+            <div class="skeleton-title"></div>
+          </div>
+        </div>
+      }
+      <p class="loading-note" aria-live="polite">
+        Analysing with Claude AI…
+        <br />
+        <small>First request may take a few seconds to warm up.</small>
+      </p>
+    </div>
+  }
+
+  <!-- Error state -->
+  @if (state === 'error') {
+    <div class="error-state" role="alert">
+      <div class="error-icon" aria-hidden="true">⚠️</div>
+      <h2>Audit failed</h2>
+      <p>{{ errorMessage || 'Something went wrong. Please try again.' }}</p>
+    </div>
+  }
+
+  <!-- Results state -->
+  @if (state === 'results') {
+    <div class="results-content">
+      <!-- Summary bar -->
+      <div class="summary-bar" role="status" aria-live="polite">
+        @if (violations.length === 0) {
+          <span class="all-clear">✓ No violations found</span>
+        } @else {
+          @if (criticalCount > 0) {
+            <span class="summary-pill critical" [attr.aria-label]="criticalCount + ' critical violations'">
+              <span aria-hidden="true">●</span> {{ criticalCount }} critical
+            </span>
+          }
+          @if (warningCount > 0) {
+            <span class="summary-pill warning" [attr.aria-label]="warningCount + ' warnings'">
+              <span aria-hidden="true">●</span> {{ warningCount }} warning{{ warningCount !== 1 ? 's' : '' }}
+            </span>
+          }
+          @if (infoCount > 0) {
+            <span class="summary-pill info" [attr.aria-label]="infoCount + ' info items'">
+              <span aria-hidden="true">●</span> {{ infoCount }} info
+            </span>
+          }
+          <div class="expand-controls">
+            <button class="btn-link" (click)="expandAll()" aria-label="Expand all violations">
+              Expand all
+            </button>
+            <span aria-hidden="true">·</span>
+            <button class="btn-link" (click)="collapseAll()" aria-label="Collapse all violations">
+              Collapse all
+            </button>
+          </div>
+        }
+      </div>
+
+      <!-- Violation list -->
+      @if (violations.length > 0) {
+        <ul class="violations-list" aria-label="Accessibility violations">
+          @for (v of violations; track trackById($index, v)) {
+            <li>
+              <app-violation-card
+                [violation]="v"
+                [expanded]="expandStates[v.id]"
+              ></app-violation-card>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  }
+
+</section>

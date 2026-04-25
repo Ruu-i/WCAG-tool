@@ -1,0 +1,90 @@
+<div class="editor-container">
+  <div class="editor-header">
+    <div class="tab-bar" role="tablist" aria-label="Code editor tabs">
+      <button
+        role="tab"
+        [attr.aria-selected]="activeTab === 'template'"
+        [class.active]="activeTab === 'template'"
+        (click)="setTab('template')"
+        class="tab-btn"
+        id="tab-template"
+        aria-controls="panel-template"
+      >
+        template.html
+        <span class="required-badge" aria-label="required">*</span>
+      </button>
+      <button
+        role="tab"
+        [attr.aria-selected]="activeTab === 'typescript'"
+        [class.active]="activeTab === 'typescript'"
+        (click)="setTab('typescript')"
+        class="tab-btn"
+        id="tab-typescript"
+        aria-controls="panel-typescript"
+      >
+        component.ts
+        <span class="optional-badge">optional</span>
+      </button>
+    </div>
+    <div class="editor-actions">
+      <button
+        class="btn btn-ghost"
+        (click)="clear()"
+        title="Clear both tabs and results"
+        aria-label="Clear editor contents"
+      >
+        Clear
+      </button>
+      <button
+        class="btn btn-primary"
+        (click)="runAudit()"
+        [disabled]="!templateCode.trim()"
+        aria-label="Run accessibility audit"
+      >
+        Audit
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="editor-panel"
+    role="tabpanel"
+    id="panel-template"
+    aria-labelledby="tab-template"
+    [hidden]="activeTab !== 'template'"
+  >
+    <ngx-monaco-editor
+      class="monaco-instance"
+      [options]="templateEditorOptions"
+      [(ngModel)]="templateCode"
+      (ngModelChange)="onTemplateChange($event)"
+    ></ngx-monaco-editor>
+  </div>
+
+  <div
+    class="editor-panel"
+    role="tabpanel"
+    id="panel-typescript"
+    aria-labelledby="tab-typescript"
+    [hidden]="activeTab !== 'typescript'"
+  >
+    @if (!tsCode) {
+      <div class="ts-hint" aria-live="polite">
+        <p>Paste your <strong>component.ts</strong> here to unlock TypeScript checks:</p>
+        <ul>
+          <li>Missing keyboard handlers on clickable elements</li>
+          <li>Dynamic ARIA bindings that may be undefined</li>
+          <li>Missing focus management in modals and overlays</li>
+          <li><code>setTimeout</code> focus anti-patterns</li>
+        </ul>
+      </div>
+    }
+    <ngx-monaco-editor
+      class="monaco-instance"
+      [ngClass]="{ 'monaco-has-hint': !tsCode }"
+      [options]="tsEditorOptions"
+      [(ngModel)]="tsCode"
+      (ngModelChange)="onTsChange($event)"
+    ></ngx-monaco-editor>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<div class="example-picker" role="region" aria-label="Built-in examples">
+  <h2 class="picker-heading">Example Components</h2>
+  <ul class="example-list" role="list">
+    @for (example of examplesService.examples; track example.id) {
+      <li>
+        <button
+          class="example-btn"
+          (click)="load(example)"
+          [attr.aria-label]="'Load example: ' + example.label"
+        >
+          <span class="example-label">{{ example.label }}</span>
+          <span class="example-desc">{{ example.description }}</span>
+          <span class="violation-hint" aria-label="{{ example.violationCount }} expected violations">
+            ~{{ example.violationCount }} issues
+          </span>
+        </button>
+      </li>
+    }
+  </ul>
+</div>
