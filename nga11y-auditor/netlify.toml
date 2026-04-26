@@ -2,6 +2,13 @@
   command = "npm run build"
   publish = "dist/nga11y-auditor/browser"
 
+[dev]
+  command = "ng serve"
+  targetPort = 4200
+  port = 8888
+  publish = "dist/nga11y-auditor/browser"
+  autoLaunch = false
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
@@ -15,6 +22,7 @@
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false
 
 [[headers]]
   for = "/assets/monaco/*"
