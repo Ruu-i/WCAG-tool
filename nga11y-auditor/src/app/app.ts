@@ -21,6 +21,7 @@ export class App implements OnInit {
   violations: Violation[] = [];
   loading$!: Observable<boolean>;
   errorMessage: string | null = null;
+  private lastContent: EditorContent | null = null;
 
   constructor(private auditService: AuditService) {}
 
@@ -43,6 +44,7 @@ export class App implements OnInit {
   }
 
   onAuditRequest(content: EditorContent): void {
+    this.lastContent = content;
     this.auditService
       .audit(content.templateCode, content.tsCode || undefined)
       .subscribe(violations => {
@@ -51,6 +53,12 @@ export class App implements OnInit {
           this.panelState = 'results';
         }
       });
+  }
+
+  onRetry(): void {
+    if (this.lastContent) {
+      this.onAuditRequest(this.lastContent);
+    }
   }
 
   onExampleSelected(content: EditorContent): void {

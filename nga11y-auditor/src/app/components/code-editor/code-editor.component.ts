@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  HostListener,
   Output,
   OnInit,
   OnDestroy,
@@ -81,6 +82,14 @@ export class CodeEditorComponent implements OnInit, OnDestroy {
   runAudit(): void {
     if (!this.templateCode.trim()) return;
     this.auditRequest.emit({ templateCode: this.templateCode, tsCode: this.tsCode });
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleCtrlEnter(event: KeyboardEvent): void {
+    if (event.ctrlKey && event.key === 'Enter') {
+      event.preventDefault();
+      this.runAudit();
+    }
   }
 
   loadContent(content: EditorContent): void {

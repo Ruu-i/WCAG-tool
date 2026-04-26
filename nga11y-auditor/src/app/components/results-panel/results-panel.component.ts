@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Violation } from '../../models/violation.model';
 import { ViolationCardComponent } from '../violation-card/violation-card.component';
@@ -16,6 +16,7 @@ export class ResultsPanelComponent implements OnChanges {
   @Input() state: PanelState = 'empty';
   @Input() violations: Violation[] = [];
   @Input() errorMessage: string | null = null;
+  @Output() retryClicked = new EventEmitter<void>();
 
   allExpanded = false;
   expandStates: Record<string, boolean> = {};

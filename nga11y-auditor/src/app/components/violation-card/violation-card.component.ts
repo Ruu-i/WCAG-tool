@@ -24,4 +24,8 @@ export class ViolationCardComponent {
   collapse(): void {
     this.expanded = false;
   }
+
+  get sourceLabel(): string {
+    return this.violation.source === 'typescript' ? 'TypeScript' : 'Template';
+  }
 }

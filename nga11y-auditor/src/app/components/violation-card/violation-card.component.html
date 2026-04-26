@@ -25,8 +25,8 @@
       <span class="wcag-badge" [attr.aria-label]="'WCAG level ' + violation.wcag_level">
         {{ violation.wcag_level }}
       </span>
-      <span class="source-badge" [attr.aria-label]="'Source: ' + violation.source">
-        {{ violation.source }}
+      <span class="source-badge" [attr.aria-label]="'Source: ' + sourceLabel">
+        {{ sourceLabel }}
       </span>
       <span class="chevron" [class.open]="expanded" aria-hidden="true">›</span>
     </div>

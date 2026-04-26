@@ -9,6 +9,7 @@
       <ul class="tips">
         <li>Add <strong>component.ts</strong> for deeper TypeScript checks</li>
         <li>Try one of the examples to see it in action</li>
+        <li>Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to run audit</li>
       </ul>
     </div>
   }
@@ -43,6 +44,9 @@
       <div class="error-icon" aria-hidden="true">⚠️</div>
       <h2>Audit failed</h2>
       <p>{{ errorMessage || 'Something went wrong. Please try again.' }}</p>
+      <button class="btn-retry" (click)="retryClicked.emit()">
+        Try again
+      </button>
     </div>
   }
 
