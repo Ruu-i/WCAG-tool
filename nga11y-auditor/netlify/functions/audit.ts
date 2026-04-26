@@ -116,16 +116,39 @@ export const handler: Handler = async (event: HandlerEvent) => {
 
   const client = new Anthropic({ apiKey });
 
-  try {
-    const message = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 4096,
-      system: buildSystemPrompt(),
-      messages: [{ role: 'user', content: buildUserPrompt(templateCode, tsCode) }],
-    });
+  const callClaude = (messages: Anthropic.MessageParam[]): Promise<string> =>
+    client.messages
+      .create({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4096,
+        system: buildSystemPrompt(),
+        messages,
+      })
+      .then(msg => (msg.content[0].type === 'text' ? msg.content[0].text : ''));
 
-    const responseText =
-      message.content[0].type === 'text' ? message.content[0].text : '';
+  const looksLikeJsonArray = (text: string): boolean =>
+    /\[[\s\S]*\]/.test(text.replace(/```json|```/gi, '').trim());
+
+  try {
+    const userMessages: Anthropic.MessageParam[] = [
+      { role: 'user', content: buildUserPrompt(templateCode, tsCode) },
+    ];
+
+    let responseText = await callClaude(userMessages);
+
+    // Silent retry — if Claude didn't return a JSON array, retry once with a stricter nudge
+    if (!looksLikeJsonArray(responseText)) {
+      console.warn('First response was not a JSON array — retrying silently');
+      responseText = await callClaude([
+        ...userMessages,
+        { role: 'assistant', content: responseText },
+        {
+          role: 'user',
+          content:
+            'Your previous response was not valid JSON. Return ONLY a JSON array starting with [. No explanation, no markdown.',
+        },
+      ]);
+    }
 
     return {
       statusCode: 200,
