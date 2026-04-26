@@ -3,10 +3,9 @@
   publish = "dist/nga11y-auditor/browser"
 
 [dev]
-  command = "ng serve"
+  command = "ng serve --host 0.0.0.0"
   targetPort = 4200
   port = 8888
-  publish = "dist/nga11y-auditor/browser"
   autoLaunch = false
 
 [functions]
