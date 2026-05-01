@@ -16,7 +16,9 @@ export class ResultsPanelComponent implements OnChanges {
   @Input() state: PanelState = 'empty';
   @Input() violations: Violation[] = [];
   @Input() errorMessage: string | null = null;
+  @Input() fixLoading = false;
   @Output() retryClicked = new EventEmitter<void>();
+  @Output() fixAllClicked = new EventEmitter<void>();
 
   allExpanded = false;
   expandStates: Record<string, boolean> = {};

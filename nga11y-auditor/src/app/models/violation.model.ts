@@ -19,6 +19,18 @@ export interface AuditResult {
   rawResponse: string;
 }
 
+export interface FixChange {
+  original: string;
+  fixed: string;
+  explanation: string;
+}
+
+export interface FixResult {
+  explanation: string;
+  changes: FixChange[];
+  full_fixed_code: string;
+}
+
 export const VALID_WCAG_RULES = new Set<string>([
   '1.1.1',
   '1.2.1', '1.2.2', '1.2.3', '1.2.4', '1.2.5',

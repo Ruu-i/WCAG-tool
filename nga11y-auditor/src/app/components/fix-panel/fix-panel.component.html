@@ -1,0 +1,47 @@
+<section class="fix-panel" aria-label="Accessibility fix">
+
+  <!-- Summary bar -->
+  <div class="fix-header">
+    <div class="fix-header-left">
+      <span class="fix-badge" aria-hidden="true">✓</span>
+      <div>
+        <h2 class="fix-title">Suggested Fix</h2>
+        <p class="fix-explanation">{{ fixResult.explanation }}</p>
+      </div>
+    </div>
+    <button
+      class="btn-copy"
+      [class.copied]="copyLabel === 'Copied!'"
+      (click)="copyToClipboard()"
+      [attr.aria-label]="copyLabel"
+    >
+      {{ copyLabel }}
+    </button>
+  </div>
+
+  <!-- Monaco diff editor -->
+  <div class="diff-container" #diffContainer aria-label="Code diff: original on left, fixed on right"></div>
+
+  <!-- Changes list -->
+  @if (fixResult.changes && fixResult.changes.length) {
+    <div class="changes-list" role="list" aria-label="Individual changes">
+      <h3 class="changes-heading">What changed ({{ fixResult.changes.length }} fix{{ fixResult.changes.length !== 1 ? 'es' : '' }})</h3>
+      @for (change of fixResult.changes; track $index) {
+        <div class="change-item" role="listitem">
+          <p class="change-explanation">{{ change.explanation }}</p>
+          <div class="change-diff">
+            <div class="change-before">
+              <span class="diff-label removed" aria-label="Removed">−</span>
+              <code>{{ change.original }}</code>
+            </div>
+            <div class="change-after">
+              <span class="diff-label added" aria-label="Added">+</span>
+              <code>{{ change.fixed }}</code>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</section>

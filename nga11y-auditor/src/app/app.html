@@ -22,6 +22,12 @@
     </div>
   </header>
 
+  <!-- Mobile notice -->
+  <div class="mobile-banner" role="note" aria-label="Desktop recommended">
+    <span aria-hidden="true">🖥</span>
+    Best experienced on desktop — Monaco editor is limited on mobile
+  </div>
+
   <!-- Main layout -->
   <main class="app-main" role="main">
 
@@ -32,11 +38,26 @@
       ></app-example-picker>
     </aside>
 
-    <!-- Editor pane -->
-    <section class="editor-pane" aria-label="Code editor">
-      <app-code-editor
-        (auditRequest)="onAuditRequest($event)"
-      ></app-code-editor>
+    <!-- Editor pane: code editor (audit view) or diff editor (fix view) -->
+    <section class="editor-pane" [attr.aria-label]="view === 'fix' ? 'Fixed code diff' : 'Code editor'">
+      @if (view === 'fix' && fixResult) {
+        <div class="fix-pane-header">
+          <button class="btn-back" (click)="backToAudit()" aria-label="Back to code editor">
+            ← Back to editor
+          </button>
+        </div>
+        <div class="fix-pane-body">
+          <app-fix-panel
+            [fixResult]="fixResult"
+            [originalCode]="fixLanguage === 'typescript' ? (lastContent?.tsCode ?? '') : (lastContent?.templateCode ?? '')"
+            [language]="fixLanguage"
+          ></app-fix-panel>
+        </div>
+      } @else {
+        <app-code-editor
+          (auditRequest)="onAuditRequest($event)"
+        ></app-code-editor>
+      }
     </section>
 
     <!-- Results pane -->
@@ -45,7 +66,9 @@
         [state]="panelState"
         [violations]="violations"
         [errorMessage]="errorMessage"
+        [fixLoading]="fixLoading"
         (retryClicked)="onRetry()"
+        (fixAllClicked)="onFixAll()"
       ></app-results-panel>
     </section>
 

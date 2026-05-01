@@ -81,6 +81,15 @@
             <button class="btn-link" (click)="collapseAll()" aria-label="Collapse all violations">
               Collapse all
             </button>
+            <span aria-hidden="true">·</span>
+            <button
+              class="btn-fix"
+              (click)="fixAllClicked.emit()"
+              [disabled]="fixLoading"
+              aria-label="Fix all violations with AI"
+            >
+              @if (fixLoading) { Fixing… } @else { ✦ Fix all }
+            </button>
           </div>
         }
       </div>
